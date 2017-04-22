@@ -32,7 +32,6 @@ var app = {
         this.receivedEvent('deviceready');
         pos();
 
-
         //Accessible map
                     var map = '';
                     function pos() {
@@ -49,6 +48,18 @@ var app = {
                         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         }).addTo(map);
+
+
+
+                        function httpGet(theUrl)
+                        {
+                            var xmlHttp = new XMLHttpRequest();
+                            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+                            xmlHttp.send( null );
+                            return xmlHttp.responseText;
+                        }
+                        httpGet('http://46.101.134.173:8000/json_all_stations/');
+
 
                         //Change the users marker to a unique red & show users location on click
                         //
