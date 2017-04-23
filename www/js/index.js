@@ -70,15 +70,31 @@ var app = {
                             lng = splitting[0];
                             lat = splitting[1];
 
-                            L.marker([lat,lng]).addTo(map)
-                            .bindPopup("<hr><b>Number: </b>"+ a['0'][i]['pk'] +
-                                "<br><b>Name: </b>" + a['0'][i]['fields']['stand_name'] +
-                                "<br><b>Free bikes: </b> " + a['0'][i]['fields']['available_bikes'] +
-                                "<hr><b>Total stands: </b>" + a['0'][i]['fields']['total_bike_stands'] +
-                                "<hr><b>Free stands: </b> " + a['0'][i]['fields']['available_bike_stands'] +
-                                "<hr><b>Updated: </b>" + a['0'][i]['fields']['last_update'] +
-                                "<hr><b>Position: </b>" + lat "," lng);
+                            L.marker([lat,lng]).addTo(map).bindPopup("<hr><b>Number: </b>"+ a['0'][i]['pk'] +"<br><b>Name: </b>" + a['0'][i]['fields']['stand_name'] +
+                                "<br><b>Free bikes: </b> " + a['0'][i]['fields']['available_bikes'] + "<hr><b>Total stands: </b>" + a['0'][i]['fields']['total_bike_stands'] +
+                                "<hr><b>Free stands: </b> " + a['0'][i]['fields']['available_bike_stands'] + "<hr><b>Updated: </b>" + a['0'][i]['fields']['last_update'] +
+                                "<hr><b>Position: </b>" + [lat,lng] + "<hr>" +"<br><button class='btn btn-primary' onclick=route_to_station(" + position.coords.latitude + "," + position.coords.longitude + ","lat "," + lng")>Route to here</button>");
                             }
+
+                            if (x !== '') {
+                                                L.Routing.control({
+                                                        waypoints: [L.latLng(users_lat_coords, users_lng_coords), L.latLng(x, y)],
+                                                        lineOptions: {addWaypoints: false}
+                                                    }
+                                                ).addTo(map);
+                                            }
+
+                                            function route_to_station(users_lat_coords1, users_lng_coords1, x1, y1) {
+                                                            users_lat_coords = users_lat_coords1;
+                                                            users_lng_coords = users_lng_coords1;
+                                                            x = x1;
+                                                            y = y1;
+                                                            //Set routing to go from the users location to the chosen location
+                                                            //
+                                                            $("#map-box").html("");
+                                                            $("#map-box").html('<div id="map" style ="height: 500px; "></div>');
+                                                            pos();
+                                                        }
                         },
                         error(){alert("No Stations bro")}
                         });
