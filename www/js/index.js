@@ -49,17 +49,39 @@ var app = {
                             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         }).addTo(map);
 
+                        var lat;
+                        var lng;
 
+                        $.ajax({
+                        method: 'GET',
+                        url: "http://46.101.134.173:8000/json_all_stations/",
+                        data:'json',
+                        success: function (bike_data) {
+                        alert('lit');
+                            for (i in bike_data) {
+                            a = bike_data
+                            console.log("Position: " + a['0'][i]['fields']['position'])
+                            coords = a['0'][i]['fields']['position']
+                            var regExp = /\(([^)]+)\)/;
+                            var matches = regExp.exec(coords);
 
-                        function httpGet(theUrl)
-                        {
-                            var xmlHttp = new XMLHttpRequest();
-                            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-                            xmlHttp.send( null );
-                            return xmlHttp.responseText;
-                        }
-                        httpGet('http://46.101.134.173:8000/json_all_stations/');
+                            //matches[1] contains the value between the parentheses
+                            splitting = matches[1].split(" ");
+                            lng = splitting[0];
+                            lat = splitting[1];
 
+                            L.marker([lat,lng]).addTo(map)
+                            .bindPopup("<hr><b>Number: </b>"+ a['0'][i]['pk'] +
+                                "<br><b>Name: </b>" + a['0'][i]['fields']['stand_name'] +
+                                "<br><b>Free bikes: </b> " + a['0'][i]['fields']['available_bikes'] +
+                                "<hr><b>Total stands: </b>" + a['0'][i]['fields']['total_bike_stands'] +
+                                "<hr><b>Free stands: </b> " + a['0'][i]['fields']['available_bike_stands'] +
+                                "<hr><b>Updated: </b>" + a['0'][i]['fields']['last_update'] +
+                                "<hr><b>Position: </b>" + lat "," lng);
+                            }
+                        },
+                        error(){alert("No Stations bro")}
+                        });
 
                         //Change the users marker to a unique red & show users location on click
                         //
