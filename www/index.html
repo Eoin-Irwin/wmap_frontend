@@ -1,5 +1,4 @@
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
+<!--Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
     regarding copyright ownership.  The ASF licenses this file
@@ -28,8 +27,9 @@
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
         <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-        -->
+
         <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'" />
+        -->
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -39,7 +39,31 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+        <title>Bike locations</title>
 
+        <script src="http://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet"
+              href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"/>
+        <!-- Routing  -->
+
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+        <link rel="stylesheet" href="/static/routing/leaflet-routing-machine.css"/>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="/static/routing/leaflet-routing-machine.js"></script>
+
+        <!-- Map  -->
+        <script src="https://cdn.jsdelivr.net/leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/leaflet.geosearch/0.1/css/l.geosearch.css">
+        <!-- CSS  -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/materialize.css"/>
+        <link rel="stylesheet" href="/static/css/style.css"/>
 
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
         <link rel="stylesheet" href="js/leaflet-routing-machine.css"/>
@@ -51,20 +75,22 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css">
 
         <title>Hello World</title>
+        <script>
+
+        </script>
     </head>
     <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-
+    <div data-role="page" id="main">
             <div id="map-box">
-                <div id="map" style="height: 500px; "></div>
+                <div id="map" style="height: 600px; width:600px;"></div>
             </div>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
+
+    <table id="example" class="display" data-order='[[ 2, "asc" ]]' cellspacing="0" width="100%">
+
+    </table>
+
+    <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>
