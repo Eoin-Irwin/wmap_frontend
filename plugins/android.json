@@ -7,16 +7,16 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
-        },
         "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+          "PACKAGE_NAME": "io.cordova.dublinbike"
+        },
+      "cordova-plugin-whitelist": {
+        "PACKAGE_NAME": "io.cordova.dublinbike"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
-            "PACKAGE_NAME": "io.cordova.hellocordova"
+          "PACKAGE_NAME": "io.cordova.dublinbike"
         }
     }
 }

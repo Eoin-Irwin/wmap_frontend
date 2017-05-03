@@ -18,6 +18,7 @@
  */
  var been_routed = false;
  var routing = '';
+ var route ='';
 function route_to_station(users_lat_coords1, users_lng_coords1, x1, y1) {
                 users_lat_coords = users_lat_coords1;
                 users_lng_coords = users_lng_coords1;
@@ -36,10 +37,13 @@ function route_to_station(users_lat_coords1, users_lng_coords1, x1, y1) {
                     );
                     routing.addTo(map);
                     been_routed = true;
+
                     var listofroutes = document.getElementsByClassName('leaflet-routing-container leaflet-bar leaflet-control');
                     if (listofroutes.length > 1) {
                         listofroutes[0].remove();
                     }
+                    setTimeout(function(){ route = document.getElementsByClassName('leaflet-routing-alt')[0]
+                    document.getElementById('move_map').innerHTML=route.outerHTML;routing.hide();}, 5000);
 
                 }
             }
@@ -65,7 +69,9 @@ function showPosition(position) {
                 //
                 L.marker([position.coords.latitude, position.coords.longitude], {
                     icon: L.AwesomeMarkers.icon({prefix: 'fa', markerColor: 'red'})
-                }).addTo(map).bindPopup("<b>Your location: </b>" + position.coords.latitude + "," + position.coords.longitude);setTimeout(function(){ map.invalidateSize()}, 400);
+                }).addTo(map).bindPopup("<b>Your location: </b>" + position.coords.latitude + "," + position.coords.longitude);
+
+                setTimeout(function(){ map.invalidateSize()}, 400);
     var lat;
     var lng;
 
@@ -144,7 +150,6 @@ let dataSet = [];
 
     //Change the users marker to a unique red & show users location
     //
-    L.marker([position.coords.latitude, position.coords.longitude]).addTo(map).bindPopup("<b>Your location: </b>" + position.coords.latitude + "," + position.coords.longitude);
 
 };
 

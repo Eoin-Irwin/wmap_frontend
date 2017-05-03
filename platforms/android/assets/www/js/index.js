@@ -16,70 +16,172 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+ var been_routed = false;
+ var routing = '';
+ var route ='';
+function route_to_station(users_lat_coords1, users_lng_coords1, x1, y1) {
+                users_lat_coords = users_lat_coords1;
+                users_lng_coords = users_lng_coords1;
+                x = x1;
+                y = y1;
+
+                if (x !== '') {
+                    if (been_routed === true) {
+                        routing.spliceWaypoints(0, 1);
+                    }
+                    routing = L.Routing.control({
+                            waypoints: [L.latLng(users_lat_coords, users_lng_coords), L.latLng(x, y)],
+                            lineOptions: {addWaypoints: false}
+
+                        }
+                    );
+                    routing.addTo(map);
+                    been_routed = true;
+
+                    var listofroutes = document.getElementsByClassName('leaflet-routing-container leaflet-bar leaflet-control');
+                    if (listofroutes.length > 1) {
+                        listofroutes[0].remove();
+                    }
+                    setTimeout(function(){ route = document.getElementsByClassName('leaflet-routing-alt')[0]
+                    document.getElementById('move_map').innerHTML=route.outerHTML;routing.hide();}, 5000);
+
+                }
+            }
+
+function pos() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+function showPosition(position) {
+
+    //Set the map view to be the users location
+                //
+                map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 14);
+                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                //Change the users marker to a unique red & show users location on click
+                //
+                L.marker([position.coords.latitude, position.coords.longitude], {
+                    icon: L.AwesomeMarkers.icon({prefix: 'fa', markerColor: 'red'})
+                }).addTo(map).bindPopup("<b>Your location: </b>" + position.coords.latitude + "," + position.coords.longitude);
+
+                setTimeout(function(){ map.invalidateSize()}, 400);
+    var lat;
+    var lng;
+
+let dataSet = [];
+    $.ajax({
+        method: 'GET',
+        url: "http://46.101.134.173:8000/json_all_stations/",
+        data:{'lat':position.coords.latitude,'long':position.coords.longitude},
+        success: function (bike_data) {
+        alert('Stations available');
+            for (i in bike_data['0']) {
+            let row = [];
+                            a = bike_data;
+                            //Find coords of bike station
+                            //
+                            coords = a['0'][i]['fields']['position'];
+
+                            //Regex for seperating lat and lng into a variable
+                            //
+                            let regExp = /\(([^)]+)\)/;
+                            let matches = regExp.exec(coords);
+
+                            //matches[1] contains the value between the parentheses
+                            //
+                            splitting = matches[1].split(" ");
+                            lng = splitting[0];
+                            lat = splitting[1];
+
+                            //Pushing data to a list for displaying later
+                            //
+                            row.push(a['0'][i]['pk']);
+                            row.push(a['0'][i]['fields']['stand_name']);
+                            row.push(a['0'][i]['distance']);
+                            row.push(a['0'][i]['fields']['available_bikes']);
+
+                            //Pushing all 101 bike data station details to the datatables view
+                            //
+                            dataSet.push(row);
+
+            L.marker([lat,lng]).addTo(map).bindPopup("<hr><b>Number: </b>"+ a['0'][i]['pk'] +"<br><b>Name: </b>" + a['0'][i]['fields']['stand_name'] +
+                "<br><b>Free bikes: </b> " + a['0'][i]['fields']['available_bikes'] + "<hr><b>Total stands: </b>" + a['0'][i]['fields']['total_bike_stands'] +
+                "<hr><b>Free stands: </b> " + a['0'][i]['fields']['available_bike_stands'] + "<hr><b>Updated: </b>" + a['0'][i]['fields']['last_update'] +
+                "<hr><b>Position: </b>" + lat + lng + "<hr>"+
+                 "<hr><b>Distance: </b>" +a['0'][i]['distance'] +"<hr>"
+                +"<br><button class='btn btn-primary' onclick=\"route_to_station(" + position.coords.latitude + "," + position.coords.longitude + "," + lat + "," + lng +")\">Route to here</button>");
+            }
+
+
+            if (x !== '') {
+                L.Routing.control({
+                        waypoints: [L.latLng(users_lat_coords, users_lng_coords), L.latLng(x, y)],
+                        lineOptions: {addWaypoints: false}
+                    }
+                ).addTo(map);
+            }
+
+                        //Data table displaying to the user
+                        //
+                        $('#example').DataTable({
+                            data: dataSet,
+                            columns: [
+                                {title: "#"},
+                                {title: "Name"},
+                                {title: "Distance (Km)"},
+                                {title: "Free Bikes"}
+
+                            ],
+
+                        });
+
+        },
+
+
+        error(){alert("No Stations available")}
+    });
+
+    //Change the users marker to a unique red & show users location
+    //
+
+};
+
+var users_lat_coords ='';
+var users_lng_coords ='';
+var x='';
+var y = '';
+//Accessible map
+var map = '';
 var app = {
-
-
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
-
     // deviceready Event Handler
     //
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+
         pos();
 
-        //Accessible map
-                    var map = '';
-                    function pos() {
-                        if (navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(showPosition);
-                        } else {
-                            alert("Geolocation is not supported by this browser.");
-                        }
-                    }
-                    function showPosition(position) {
-                        //Set the map view to be the users location
-                        //
-                        map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 14);
-                        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        }).addTo(map);
-
-
-
-                        function httpGet(theUrl)
-                        {
-                            var xmlHttp = new XMLHttpRequest();
-                            xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-                            xmlHttp.send( null );
-                            return xmlHttp.responseText;
-                        }
-                        httpGet('http://46.101.134.173:8000/json_all_stations/');
-
-
-                        //Change the users marker to a unique red & show users location on click
-                        //
-                        L.marker([position.coords.latitude, position.coords.longitude]).addTo(map).bindPopup("<b>Your location: </b>" + position.coords.latitude + "," + position.coords.longitude);
-
-                    };
-        },
-
+    },
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
     }
 };
 
 app.initialize();
+
