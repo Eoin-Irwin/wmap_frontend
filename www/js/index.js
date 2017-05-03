@@ -55,11 +55,17 @@ function pos() {
 function showPosition(position) {
 
     //Set the map view to be the users location
-    //
-    map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 15);
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);setTimeout(function(){ map.invalidateSize()}, 400);
+                //
+                map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 14);
+                L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                //Change the users marker to a unique red & show users location on click
+                //
+                L.marker([position.coords.latitude, position.coords.longitude], {
+                    icon: L.AwesomeMarkers.icon({prefix: 'fa', markerColor: 'red'})
+                }).addTo(map).bindPopup("<b>Your location: </b>" + position.coords.latitude + "," + position.coords.longitude);setTimeout(function(){ map.invalidateSize()}, 400);
     var lat;
     var lng;
 
